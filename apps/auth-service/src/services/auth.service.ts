@@ -63,7 +63,10 @@ export const loginUser = async (
             "Invalid email or password"
         )
     }
-
+    // find user
+    const refreshToken = generateRefreshToken(user.id)
+    const accessToken = generateAccessToken(user.id)
+    await db.orm.public.User.where({ id: user.id }).update({ refreshToken })
     return {
         message: "Login successful",
         user: {
@@ -72,6 +75,8 @@ export const loginUser = async (
             email: user.email,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt
-        }
+        },
+        refreshToken,
+        accessToken,
     };
 };

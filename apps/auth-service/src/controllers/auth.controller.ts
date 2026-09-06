@@ -31,7 +31,7 @@ export const registerController = asyncHandler(async (
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     return res.status(201).json(
         new ApiResponse(
@@ -53,16 +53,14 @@ export const loginController = asyncHandler(async (
         email,
         password
     );
-    const accessToken = generateAccessToken(result.user.id)
-    const refreshToken = generateRefreshToken(result.user.id)
 
-    res.cookie("accessToken", accessToken, {
+    res.cookie("accessToken", result.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 15 * 60 * 1000,
     })
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshToken", result.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
