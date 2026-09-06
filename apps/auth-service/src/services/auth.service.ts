@@ -1,11 +1,15 @@
 import bcrypt from "bcryptjs";
 import { db } from "../prisma/db";
+import { ApiError } from "@blogforge/shared";
 
 export const registerUser = async (name: string, email: string, password: string) => {
     // find If User already Exists
     const isUserAlreadyExists = await db.orm.public.User.where({ email }).first();
     if(isUserAlreadyExists) {
-        throw new Error("User with this email is already exists")
+        throw new ApiError(
+            409,
+            "User with this email is already exists"
+        )
     }
     const hashedPassword = await bcrypt.hash(password, 10)
     const user = await db.orm.public.User.create({
@@ -24,3 +28,43 @@ export const registerUser = async (name: string, email: string, password: string
         },
     }
 }
+
+export const loginUser = async (
+    email: string,
+    password: string,
+) => {
+
+    const user = await db.orm.public.User
+        .where({ email })
+        .first();
+
+    if (!user) {
+        throw new ApiError(
+            401,
+            "Invalid email or password"
+        )
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+        password,
+        user.password
+    );
+
+    if (!isPasswordValid) {
+        throw new ApiError(
+            401,
+            "Invalid email or password"
+        )
+    }
+
+    return {
+        message: "Login successful",
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        }
+    };
+};
