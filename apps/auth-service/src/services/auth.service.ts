@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { db } from "../prisma/db";
 import { ApiError } from "@blogforge/shared";
+import { generateAccessToken, generateRefreshToken } from "./token.service";
 
 export const registerUser = async (name: string, email: string, password: string) => {
     // find If User already Exists
@@ -15,8 +16,12 @@ export const registerUser = async (name: string, email: string, password: string
     const user = await db.orm.public.User.create({
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        refreshToken: ""
     })
+    const accessToken = generateAccessToken(user.id)
+    const refreshToken = generateRefreshToken(user.id)
+    await db.orm.public.User.where({ id: user.id }).update({ refreshToken })
     return {    
         message: "User registered successfully",
         user:{
@@ -26,6 +31,8 @@ export const registerUser = async (name: string, email: string, password: string
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         },
+        accessToken,
+        refreshToken,
     }
 }
 

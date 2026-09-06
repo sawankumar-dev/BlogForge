@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'4411632ead52961d4e8fe16cc726d0b75984ceb50149cf3ae2a36fb570da078a'>;
+  StorageHashBase<'e4bc65793b32b3392ebd9538f9f873021ffc23da0357ff6c66bf62d98f712351'>;
 export type ExecutionHash =
   ExecutionHashBase<'a499031370d1fd1891ca11072d3f7e11be752b686057f7c6d0900ee0159f4ed0'>;
 export type ProfileHash =
@@ -246,6 +246,7 @@ export type FieldOutputTypes = {
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
+      readonly refreshToken: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -258,6 +259,7 @@ export type FieldInputTypes = {
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
+      readonly refreshToken: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -271,6 +273,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
+      readonly refreshToken: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
   };
@@ -283,6 +286,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
+      readonly refreshToken: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
   };
@@ -330,6 +334,15 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                };
+                readonly refreshToken: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', ''>;
+                  };
                 };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
@@ -383,6 +396,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly refreshToken: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: {
@@ -407,6 +424,7 @@ type ContractBase = Omit<
                 readonly name: { readonly column: 'name' };
                 readonly email: { readonly column: 'email' };
                 readonly password: { readonly column: 'password' };
+                readonly refreshToken: { readonly column: 'refreshToken' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
