@@ -1,0 +1,26 @@
+services:
+  auth-db:
+    image: postgres:18
+    container_name: blogforge-auth-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: blogforge-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: password123
+    ports:
+      - "5050:80"
+    depends_on:
+      - auth-db
+
+volumes:
+  auth_db_data:
