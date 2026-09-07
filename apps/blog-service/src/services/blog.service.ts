@@ -15,6 +15,12 @@ class BlogService {
         })
         return blog
     }
+    async getAllBlogs (
+
+    ) {
+        const blogs = await db.orm.public.Blog.all();
+        return blogs;
+    }
 }
 
 export default new BlogService()

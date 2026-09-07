@@ -23,3 +23,19 @@ export const createBlog = asyncHandler(
         )
     }
 )
+
+export const getAllBlogs = asyncHandler(
+    async (
+        req: Request,
+        res: Response,
+    ) => {
+        const blogs = await blogService.getAllBlogs()
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                "All Blogs fetched successfully!",
+                blogs
+            )
+        )
+    }
+)
