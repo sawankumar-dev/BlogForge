@@ -2,7 +2,8 @@ import type { Response, Request } from "express";
 import {
     registerUser,
     loginUser,
-    refreshAccessTokenService
+    refreshAccessTokenService,
+    logoutUserService
 } from "../services/auth.service.js";
 import {
     ApiResponse,
@@ -113,6 +114,32 @@ export const refreshAccessToken = asyncHandler (
             new ApiResponse(
                 200,
                 "Access token refreshed successfully",
+                null
+            )
+        )
+    }
+)
+
+export const logoutUser = asyncHandler (
+    async (
+        req: Request,
+        res: Response,
+    ) => {
+        await logoutUserService(Number(req.user.id))
+        res.cookie("accessToken", "", {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production"
+        })
+        res.cookie("refreshToken", "", {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production"
+        })
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                "User Logout Successfully",
                 null
             )
         )

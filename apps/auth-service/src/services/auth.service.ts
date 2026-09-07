@@ -124,10 +124,21 @@ export const refreshAccessTokenService = async (token: string) => {
     const refreshToken= generateRefreshToken(user.id)
     
     await db.orm.public.User.where({ id: user.id }).update({ refreshToken })
-    
+
     return {
         user,
         accessToken,
         refreshToken
     }
+}
+
+export const logoutUserService = async (userId: number) => {
+    const user = await db.orm.public.User.where({ id: userId }).update({ refreshToken: "" })
+    if(!user) {
+        throw new ApiError(
+            404,
+            "User not found"
+        )
+    }
+    return user
 }
