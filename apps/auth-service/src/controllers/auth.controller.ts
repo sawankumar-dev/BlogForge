@@ -1,7 +1,8 @@
 import type { Response, Request } from "express";
 import {
     registerUser,
-    loginUser
+    loginUser,
+    refreshAccessTokenService
 } from "../services/auth.service.js";
 import {
     ApiResponse,
@@ -88,3 +89,32 @@ export const myProfile = asyncHandler(async (
         )
     )
 })
+
+export const refreshAccessToken = asyncHandler (
+    async (
+        req: Request,
+        res: Response
+    ) => {            
+        const refToken = req.cookies.refreshToken;
+        const { user, refreshToken, accessToken   } = await refreshAccessTokenService(refToken)
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            maxAge: 15 * 60 * 1000,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+        })
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+        })
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                "Access token refreshed successfully",
+                null
+            )
+        )
+    }
+)
