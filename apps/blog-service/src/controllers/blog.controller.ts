@@ -56,3 +56,21 @@ export const getSingleBlog = asyncHandler(
         )
     }
 )
+
+export const updateBlog = asyncHandler(
+    async (
+        req: Request,
+        res: Response,
+    ) => {
+        const { title, content, slug } = req.body;
+        const { id } = req.params;
+        const updatedBlog = await blogService.updateBlog(Number(id), title, slug, content);
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                "Blog updated successfully!",
+                updatedBlog
+            )
+        )
+    }
+)

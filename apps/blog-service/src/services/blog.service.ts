@@ -30,6 +30,26 @@ class BlogService {
         }
         return blog;
     }
+    async updateBlog ( 
+        id: number,
+        title?: string,
+        slug?: string,
+        content?: string
+    ) {
+        const existingBlog = await db.orm.public.Blog.where({ id }).first()
+        if(!existingBlog) {
+            throw new ApiError(
+                404,
+                "Blog not found"
+            )
+        }
+        const blog = await db.orm.public.Blog.where({ id }).update({
+            title: title ?? existingBlog.title,
+            slug: slug ?? existingBlog.slug,
+            content: content ?? existingBlog.content,
+        });
+        return blog;
+    }
 }
 
 export default new BlogService()
