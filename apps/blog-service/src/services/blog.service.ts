@@ -1,3 +1,4 @@
+import { ApiError } from "@blogforge/shared";
 import { db } from "../prisma/db"
 
 class BlogService {
@@ -15,11 +16,19 @@ class BlogService {
         })
         return blog
     }
-    async getAllBlogs (
-
-    ) {
+    async getAllBlogs () {
         const blogs = await db.orm.public.Blog.all();
         return blogs;
+    }
+    async getSingleBlog(id: number) {
+        const blog = await db.orm.public.Blog.where({ id }).first();
+        if(!blog) {
+            throw new ApiError(
+                404,
+                "blog not found"
+            )
+        }
+        return blog;
     }
 }
 

@@ -1,12 +1,14 @@
 import { Router } from "express";
 import {
      createBlog, 
-     getAllBlogs
+     getAllBlogs,
+     getSingleBlog
 } from "../controllers/blog.controller.js";
 
 const router = Router();
 
-router.get("/", getAllBlogs)
 router.post("/", createBlog)
+router.get("/", getAllBlogs)
+router.get("/:id", getSingleBlog)
 
 export default router;

@@ -39,3 +39,20 @@ export const getAllBlogs = asyncHandler(
         )
     }
 )
+
+export const getSingleBlog = asyncHandler(
+    async (
+        req: Request,
+        res: Response
+    ) => {
+        const { id } = req.params;
+        const blog = await blogService.getSingleBlog(Number(id));
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                "Blog fetched successfully",
+                blog
+            )
+        )
+    }
+)
