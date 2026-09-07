@@ -10,7 +10,17 @@ services:
       - "5432:5432"
     volumes:
       - auth_db_data:/var/lib/postgresql
-
+  blog-db:
+    image: postgres:18
+    container_name: blogforge-blog-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blog_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - blog_db_data:/var/lib/postgresql
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: blogforge-pgadmin
@@ -24,3 +34,4 @@ services:
 
 volumes:
   auth_db_data:
+  blog_db_data:
