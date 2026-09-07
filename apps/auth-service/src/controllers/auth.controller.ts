@@ -7,7 +7,6 @@ import {
     ApiResponse,
     asyncHandler
 } from "@blogforge/shared";
-import { generateAccessToken, generateRefreshToken } from "../services/token.service.js";
 
 export const registerController = asyncHandler(async (
     req: Request,
@@ -75,3 +74,17 @@ export const loginController = asyncHandler(async (
         )
     );
 });
+
+export const myProfile = asyncHandler(async (
+    req: Request,
+    res: Response,
+) => {
+    const user = req.user;
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            "user Fetched successfully",
+            user
+        )
+    )
+})

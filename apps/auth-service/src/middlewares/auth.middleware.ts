@@ -42,7 +42,13 @@ export const verifyJwt = async (
             throw new Error("Invalid access token payload");
         }
 
-        const user = await db.orm.public.User.where({ id: decoded.userId }).first();
+        const user = await db.orm.public.User.where({ id: decoded.userId }).select(
+            "id",
+            "name",
+            "email",
+            "createdAt",
+            "updatedAt"
+        ).first();
         if(!user) {
             throw new ApiError(
                 404,

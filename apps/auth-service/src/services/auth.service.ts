@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { db } from "../prisma/db";
-import { ApiError } from "@blogforge/shared";
+import { ApiError, asyncHandler } from "@blogforge/shared";
 import { generateAccessToken, generateRefreshToken } from "./token.service";
 
 export const registerUser = async (name: string, email: string, password: string) => {
