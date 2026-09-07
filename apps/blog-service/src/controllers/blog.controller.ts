@@ -74,3 +74,20 @@ export const updateBlog = asyncHandler(
         )
     }
 )
+
+export const deleteBlog = asyncHandler(
+    async (
+        req: Request,
+        res: Response,
+    ) => {
+        const id = Number(req.params.id);
+        const deletedBlog = await blogService.deleteBlog(id);
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                "Blog Deleted successfully",
+                deletedBlog
+            )
+        )
+    }
+)

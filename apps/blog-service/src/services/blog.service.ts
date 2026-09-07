@@ -50,6 +50,17 @@ class BlogService {
         });
         return blog;
     }
+    async deleteBlog (id: number) {
+        const existingBlog = await db.orm.public.Blog.where({ id }).first();
+        if(!existingBlog) {
+            throw new ApiError(
+                404,
+                "Blog not found"
+            )
+        }
+        await db.orm.public.Blog.where({ id }).delete()
+        return existingBlog;
+    }    
 }
 
 export default new BlogService()
