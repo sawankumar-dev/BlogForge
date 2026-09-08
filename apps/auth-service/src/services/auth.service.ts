@@ -87,8 +87,8 @@ export const loginUser = async (
 export const refreshAccessTokenService = async (token: string) => {
     if(!token) {
         throw new ApiError(
-            404,
-            "Refresh Token not found"
+            401,
+           "Refresh Token is required"
         )
     }
     const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -98,10 +98,18 @@ export const refreshAccessTokenService = async (token: string) => {
             "Refresh token secret not come."
         )
     }
-    const decoded = jwt.verify(token, refreshTokenSecret);
+    let decoded;
+    try {
+        decoded = jwt.verify(token, refreshTokenSecret);
+    } catch {
+        throw new ApiError(
+            401,
+            "Invalid or expired refresh token"
+        );
+    }
     if(typeof decoded === 'string' || typeof decoded.userId !== 'number') {
         throw new ApiError(401,
-            "Invalid access token payload"
+             "Invalid refresh token payload"
         )
     }
     const user = await db.orm.public.User.where({ id: decoded.userId })
@@ -126,9 +134,8 @@ export const refreshAccessTokenService = async (token: string) => {
     await db.orm.public.User.where({ id: user.id }).update({ refreshToken })
 
     return {
-        user,
-        accessToken,
-        refreshToken
+        refreshToken,
+        accessToken
     }
 }
 

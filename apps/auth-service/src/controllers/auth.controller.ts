@@ -97,7 +97,7 @@ export const refreshAccessToken = asyncHandler (
         res: Response
     ) => {            
         const refToken = req.cookies.refreshToken;
-        const { user, refreshToken, accessToken   } = await refreshAccessTokenService(refToken)
+        const { refreshToken, accessToken   } = await refreshAccessTokenService(refToken)
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             maxAge: 15 * 60 * 1000,
