@@ -4,8 +4,6 @@ import { ApiError, asyncHandler } from "@blogforge/shared";
 import { generateAccessToken, generateRefreshToken } from "./token.service";
 import jwt from 'jsonwebtoken'
 
-
-
 export const registerUser = async (name: string, email: string, password: string) => {
     // find If User already Exists
     const isUserAlreadyExists = await db.orm.public.User.where({ email }).first();
@@ -140,7 +138,29 @@ export const refreshAccessTokenService = async (token: string) => {
 }
 
 export const logoutUserService = async (userId: number) => {
-    const user = await db.orm.public.User.where({ id: userId }).update({ refreshToken: "" })
+
+    const user = await db.orm.public.User
+        .where({ id: userId })
+        .first();
+
+    if (!user) {
+        throw new ApiError(
+            404,
+            "User not found"
+        );
+    }
+
+    await db.orm.public.User
+        .where({ id: userId })
+        .update({
+            refreshToken: ""
+        });
+
+    return true;
+};
+
+export const getMyProfileService = async (userId: number) => {
+    const user = db.orm.public.User.where({id: userId}).first()
     if(!user) {
         throw new ApiError(
             404,

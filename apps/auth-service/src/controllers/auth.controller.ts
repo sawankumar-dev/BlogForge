@@ -3,7 +3,8 @@ import {
     registerUser,
     loginUser,
     refreshAccessTokenService,
-    logoutUserService
+    logoutUserService,
+    getMyProfileService
 } from "../services/auth.service.js";
 import {
     ApiResponse,
@@ -81,7 +82,9 @@ export const myProfile = asyncHandler(async (
     req: Request,
     res: Response,
 ) => {
-    const user = req.user;
+    console.log("me profile chala to sahi")
+    const userId = Number(req.headers["x-user-id"]);
+    const user = await getMyProfileService(userId)
     return res.status(200).json(
         new ApiResponse(
             200,
@@ -120,28 +123,33 @@ export const refreshAccessToken = asyncHandler (
     }
 )
 
-export const logoutUser = asyncHandler (
+export const logoutUser = asyncHandler(
     async (
         req: Request,
-        res: Response,
+        res: Response
     ) => {
-        await logoutUserService(Number(req.user.id))
-        res.cookie("accessToken", "", {
+        const userId = Number(req.headers["x-user-id"]);
+
+        await logoutUserService(userId);
+
+        res.clearCookie("accessToken", {
             httpOnly: true,
             sameSite: "lax",
             secure: process.env.NODE_ENV === "production"
-        })
-        res.cookie("refreshToken", "", {
+        });
+
+        res.clearCookie("refreshToken", {
             httpOnly: true,
             sameSite: "lax",
             secure: process.env.NODE_ENV === "production"
-        })
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
                 "User Logout Successfully",
                 null
             )
-        )
+        );
     }
-)
+);

@@ -3,14 +3,16 @@ import healthRouter from './routes/health.route.js'
 import { loggerMiddleware } from './middlewares/logger.middleware.js'
 import authRouter from './routes/auth.routes.js'
 import { errorMiddleware } from './middlewares/error.middleware.js'
-// cookie-parser does not ship TypeScript declarations.
-// @ts-expect-error: cookie-parser is a JavaScript dependency without bundled types.
-import cookieParser from "cookie-parser"
+import { compareSecret } from './middlewares/auth.middleware.js'
+import cookieParser from 'cookie-parser'
+
 
 const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
+
+app.use(compareSecret)
 app.use(loggerMiddleware)
 
 app.use("/health", healthRouter)
