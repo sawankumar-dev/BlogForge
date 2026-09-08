@@ -8,6 +8,14 @@ const router = Router();
 const blogProxy = createProxyMiddleware({
     target: "http://localhost:4002/blogs",
     changeOrigin: true,
+    on: {
+        proxyReq: (proxyReq, req) => {
+            proxyReq.setHeader(
+                "x-internal-secret",
+                process.env.INTERNAL_SERVICE_SECRET!
+            );
+        }
+    }
 })
 
 const createAuthenticatedBlogProxy = () => {
@@ -20,6 +28,10 @@ const createAuthenticatedBlogProxy = () => {
                 proxyReq.setHeader(
                     "x-user-id",
                     String((req as IncomingMessage & { userId: string }).userId)
+                );
+                proxyReq.setHeader(
+                    "x-internal-secret",
+                    process.env.INTERNAL_SERVICE_SECRET!
                 )
             }
         }
