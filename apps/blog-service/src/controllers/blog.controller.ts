@@ -7,7 +7,8 @@ export const createBlog = asyncHandler(
         req: Request,
         res: Response
     ) => {
-        const { title, slug, content, authorId } = req.body;
+        const { title, slug, content } = req.body;
+        const authorId = Number(req.headers["x-user-id"]);
         const blog = await blogService.createBlog(
             title,
             slug,
@@ -63,8 +64,9 @@ export const updateBlog = asyncHandler(
         res: Response,
     ) => {
         const { title, content, slug } = req.body;
+        const userId = Number(req.headers["x-user-id"])
         const { id } = req.params;
-        const updatedBlog = await blogService.updateBlog(Number(id), title, slug, content);
+        const updatedBlog = await blogService.updateBlog(Number(id), userId, title, slug, content);
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -81,7 +83,8 @@ export const deleteBlog = asyncHandler(
         res: Response,
     ) => {
         const id = Number(req.params.id);
-        const deletedBlog = await blogService.deleteBlog(id);
+        const userId = req.headers["x-user-id"];
+        const deletedBlog = await blogService.deleteBlog(id, Number(userId));
         return res.status(200).json(
             new ApiResponse(
                 200,
